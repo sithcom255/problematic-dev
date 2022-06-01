@@ -123,10 +123,15 @@ const Content: FC = () => {
 
   return (
     <div className="App">
+        <div>
         <p>Only use on devnet</p>
+        <br/>
       <button onClick={scam}>GET REKT</button>
+      <br></br>
       <p>Only use on devnet</p>
+      <br></br>
       <WalletMultiButton />
+      </div>
     </div>
   );
 };
