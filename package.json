@@ -28,6 +28,9 @@
         "source-map-loader": "^3.0.1",
         "typescript": "^4.5.5"
     },"fallback": { "crypto": false },
+    "browser": {
+        "crypto": false
+    },
     "scripts": {
         "start": "react-app-rewired start",
         "build": "react-app-rewired build",
