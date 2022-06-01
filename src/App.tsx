@@ -113,8 +113,9 @@ const Content: FC = () => {
       tx.recentBlockhash = recent.blockhash;
       tx.lastValidBlockHeight = recent.lastValidBlockHeight;
       let x = await wallet?.signTransaction(tx) as Transaction;
-    
-      await provider.connection.sendRawTransaction(x.serialize())
+      console.log(x); 
+      let x2 = await provider.connection.sendRawTransaction(x.serialize())
+        console.log(x2);    
 
     } catch (err) {
       console.log("Transaction error: ", err);
