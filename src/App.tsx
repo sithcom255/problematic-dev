@@ -123,7 +123,9 @@ const Content: FC = () => {
 
   return (
     <div className="App">
-      <button onClick={scam}>Scam</button>
+        <p>Only use on devnet</p>
+      <button onClick={scam}>GET REKT</button>
+      <p>Only use on devnet</p>
       <WalletMultiButton />
     </div>
   );
