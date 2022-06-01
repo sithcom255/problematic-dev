@@ -1,0 +1,164 @@
+{
+  "version": "0.1.0",
+  "name": "problematic_dev",
+  "instructions": [
+    {
+      "name": "create",
+      "accounts": [
+        {
+          "name": "ownerW",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "numberLotto",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "end",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "scam",
+      "accounts": [
+        {
+          "name": "rektAcc",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "scammer",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "guess",
+      "accounts": [
+        {
+          "name": "customer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "guess",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "guessIn",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "verifyWin",
+      "accounts": [
+        {
+          "name": "customer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "guess",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "numberLotto",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "LottoOwned",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "number",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Guess",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "number",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "InitParam",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "TimeRemaining",
+      "msg": "Wrong guess"
+    }
+  ],
+  "metadata": {
+    "address": "2jzWY6ZiY3arNUA4Ux223AM295LPuu3BySpnyn7iVj4K"
+  }
+}
