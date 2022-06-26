@@ -19,7 +19,6 @@ import {
 
 import {
   clusterApiUrl,
-  Connection,
   Transaction,
   SystemProgram,
   LAMPORTS_PER_SOL,
@@ -29,13 +28,10 @@ import { useParams } from "react-router-dom";
 import idl from "./problematic_dev.json";
 import {
   Program,
-  Provider,
   AnchorProvider,
   web3,
-  BN,
-  Wallet,
 } from "@project-serum/anchor";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+
 import "./App.css";
 require("@solana/wallet-adapter-react-ui/styles.css");
 
